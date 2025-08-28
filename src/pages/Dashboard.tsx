@@ -59,10 +59,10 @@ const priorityColors = {
 };
 
 const priorityColorsBg = {
-  "Crítica": "bg-priority-critical-bg text-priority-critical",
-  "Alta": "bg-priority-high-bg text-priority-high", 
-  "Média": "bg-priority-medium-bg text-priority-medium",
-  "Baixa": "bg-priority-low-bg text-priority-low"
+  "Crítica": "bg-red-50 text-red-700 border-red-200",
+  "Alta": "bg-orange-50 text-orange-700 border-orange-200", 
+  "Média": "bg-amber-50 text-amber-700 border-amber-200",
+  "Baixa": "bg-green-50 text-green-700 border-green-200"
 };
 
 const statusColors = {
