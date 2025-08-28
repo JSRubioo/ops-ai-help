@@ -52,17 +52,24 @@ const mockTickets = [
 ];
 
 const priorityColors = {
-  "Crítica": "priority-critical",
-  "Alta": "priority-high", 
-  "Média": "priority-medium",
-  "Baixa": "priority-low"
+  "Crítica": "bg-priority-critical text-white",
+  "Alta": "bg-priority-high text-white", 
+  "Média": "bg-priority-medium text-white",
+  "Baixa": "bg-priority-low text-white"
+};
+
+const priorityColorsBg = {
+  "Crítica": "bg-priority-critical-bg text-priority-critical",
+  "Alta": "bg-priority-high-bg text-priority-high", 
+  "Média": "bg-priority-medium-bg text-priority-medium",
+  "Baixa": "bg-priority-low-bg text-priority-low"
 };
 
 const statusColors = {
-  "Aberto": "bg-blue-100 text-blue-800",
-  "Em Andamento": "bg-yellow-100 text-yellow-800", 
-  "Resolvido": "bg-green-100 text-green-800",
-  "Fechado": "bg-gray-100 text-gray-800"
+  "Aberto": "bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400",
+  "Em Andamento": "bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-400", 
+  "Resolvido": "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400",
+  "Fechado": "bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400"
 };
 
 export default function Dashboard() {
@@ -235,7 +242,7 @@ export default function Dashboard() {
                     </td>
                     <td className="h-12 px-4 align-middle">
                       <Badge 
-                        className={`bg-${priorityColors[ticket.priority as keyof typeof priorityColors]}`}
+                        className={priorityColorsBg[ticket.priority as keyof typeof priorityColorsBg]}
                       >
                         {ticket.priority}
                       </Badge>
