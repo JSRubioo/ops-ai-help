@@ -7,7 +7,6 @@ import { Layout } from "./components/layout/Layout";
 import Dashboard from "./pages/Dashboard";
 import NovoTicket from "./pages/NovoTicket";
 import FAQ from "./pages/FAQ";
-import Relatorios from "./pages/Relatorios";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,7 +23,7 @@ const App = () => (
             <Route path="/novo-ticket" element={<NovoTicket />} />
             <Route path="/meus-tickets" element={<Dashboard />} />
             <Route path="/faq" element={<FAQ />} />
-            <Route path="/relatorios" element={<Relatorios />} />
+            <Route path="/relatorios" element={<Dashboard />} />
             <Route path="/usuarios" element={<Dashboard />} />
             <Route path="/configuracoes" element={<Dashboard />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
