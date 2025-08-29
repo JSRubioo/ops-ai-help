@@ -58,12 +58,12 @@ const priorityColors = {
   "Baixa": "bg-priority-low text-white"
 };
 
-const priorityColorsBg = {
-  "Crítica": "bg-red-50 text-red-700 border-red-200",
-  "Alta": "bg-orange-50 text-orange-700 border-orange-200", 
-  "Média": "bg-amber-50 text-amber-700 border-amber-200",
-  "Baixa": "bg-green-50 text-green-700 border-green-200"
-};
+  const priorityColorsBg = {
+    "Crítica": "bg-red-50 text-red-700 border-red-200",
+    "Alta": "bg-orange-50 text-orange-700 border-orange-200", 
+    "Média": "bg-orange-50 text-orange-700 border-orange-200",
+    "Baixa": "bg-green-50 text-green-700 border-green-200"
+  };
 
 const statusColors = {
   "Aberto": "bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400",

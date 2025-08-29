@@ -6,7 +6,7 @@
 
 @layer base {
   :root {
-    --background: 248 250 252;
+    --background: 214 32% 91%;
     --foreground: 215 25% 27%;
 
     --card: 0 0% 100%;
@@ -31,7 +31,7 @@
     --success: 142 76% 36%;
     --success-foreground: 0 0% 100%;
 
-    --warning: 45 93% 47%;
+    --warning: 25 95% 53%;
     --warning-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
@@ -48,8 +48,8 @@
     --critical-bg: 0 84% 96%;
     --high: 14 90% 53%;
     --high-bg: 14 90% 95%;
-    --medium: 45 93% 47%;
-    --medium-bg: 45 93% 95%;
+    --medium: 25 95% 53%;
+    --medium-bg: 25 95% 95%;
     --low: 142 76% 36%;
     --low-bg: 142 76% 95%;
 
@@ -120,8 +120,8 @@
     --critical-bg: 0 84% 8%;
     --high: 14 90% 53%;
     --high-bg: 14 90% 8%;
-    --medium: 45 93% 47%;
-    --medium-bg: 45 93% 8%;
+    --medium: 25 95% 53%;
+    --medium-bg: 25 95% 8%;
     --low: 142 76% 36%;
     --low-bg: 142 76% 8%;
 
