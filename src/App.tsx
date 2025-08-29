@@ -9,6 +9,7 @@ import NovoTicket from "./pages/NovoTicket";
 import FAQ from "./pages/FAQ";
 import Relatorios from "./pages/Relatorios";
 import PesquisarTickets from "./pages/PesquisarTickets";
+import EditarTicket from "./pages/EditarTicket";
 import Usuarios from "./pages/Usuarios";
 import NotFound from "./pages/NotFound";
 
@@ -25,6 +26,7 @@ const App = () => (
             <Route path="/" element={<Dashboard />} />
             <Route path="/novo-ticket" element={<NovoTicket />} />
             <Route path="/meus-tickets" element={<PesquisarTickets />} />
+            <Route path="/editar-ticket/:id" element={<EditarTicket />} />
             <Route path="/faq" element={<FAQ />} />
             <Route path="/relatorios" element={<Relatorios />} />
             <Route path="/usuarios" element={<Usuarios />} />

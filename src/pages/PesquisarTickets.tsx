@@ -1,11 +1,13 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Search, Filter, Eye, Edit } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Search, Filter, Eye, Edit, CheckCircle } from "lucide-react";
 
 interface Ticket {
   id: string;
@@ -81,6 +83,7 @@ const priorityColors = {
 };
 
 export default function PesquisarTickets() {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("todos");
   const [priorityFilter, setPriorityFilter] = useState<string>("todas");
@@ -99,12 +102,24 @@ export default function PesquisarTickets() {
     return matchesSearch && matchesStatus && matchesPriority && matchesCategory;
   });
 
+  const ticketsAtivos = filteredTickets.filter(ticket => 
+    ticket.status === "Aberto" || ticket.status === "Em Andamento"
+  );
+
+  const ticketsFinalizados = filteredTickets.filter(ticket => 
+    ticket.status === "Resolvido" || ticket.status === "Fechado"
+  );
+
+  const handleEditTicket = (ticketId: string) => {
+    navigate(`/editar-ticket/${ticketId}`);
+  };
+
   return (
     <div className="p-6 space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Pesquisar Chamados</h1>
+        <h1 className="text-3xl font-bold tracking-tight">Meus Chamados</h1>
         <p className="text-muted-foreground mt-2">
-          Encontre e visualize chamados existentes no sistema
+          Gerencie seus chamados ativos e acompanhe o histórico
         </p>
       </div>
 
@@ -183,74 +198,159 @@ export default function PesquisarTickets() {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Resultados da Pesquisa</CardTitle>
-          <CardDescription>
-            Encontrados {filteredTickets.length} chamado(s)
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>ID</TableHead>
-                <TableHead>Título</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Prioridade</TableHead>
-                <TableHead>Categoria</TableHead>
-                <TableHead>Usuário</TableHead>
-                <TableHead>Data Criação</TableHead>
-                <TableHead>Ações</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredTickets.map((ticket) => (
-                <TableRow key={ticket.id}>
-                  <TableCell className="font-medium">{ticket.id}</TableCell>
-                  <TableCell>
-                    <div>
-                      <div className="font-medium">{ticket.titulo}</div>
-                      <div className="text-sm text-muted-foreground truncate max-w-xs">
-                        {ticket.descricao}
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant="secondary" className={statusColors[ticket.status]}>
-                      {ticket.status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant="secondary" className={priorityColors[ticket.prioridade]}>
-                      {ticket.prioridade}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>{ticket.categoria}</TableCell>
-                  <TableCell>{ticket.usuario}</TableCell>
-                  <TableCell>{new Date(ticket.dataCriacao).toLocaleDateString('pt-BR')}</TableCell>
-                  <TableCell>
-                    <div className="flex gap-2">
-                      <Button variant="outline" size="sm">
-                        <Eye className="h-4 w-4" />
-                      </Button>
-                      <Button variant="outline" size="sm">
-                        <Edit className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+      <Tabs defaultValue="ativos" className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="ativos" className="flex items-center gap-2">
+            <Search className="h-4 w-4" />
+            Chamados Ativos ({ticketsAtivos.length})
+          </TabsTrigger>
+          <TabsTrigger value="finalizados" className="flex items-center gap-2">
+            <CheckCircle className="h-4 w-4" />
+            Chamados Finalizados ({ticketsFinalizados.length})
+          </TabsTrigger>
+        </TabsList>
 
-          {filteredTickets.length === 0 && (
-            <div className="text-center py-8 text-muted-foreground">
-              Nenhum chamado encontrado com os filtros aplicados.
-            </div>
-          )}
-        </CardContent>
-      </Card>
+        <TabsContent value="ativos">
+          <Card>
+            <CardHeader>
+              <CardTitle>Chamados Ativos</CardTitle>
+              <CardDescription>
+                Chamados em aberto ou em andamento ({ticketsAtivos.length})
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>ID</TableHead>
+                    <TableHead>Título</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Prioridade</TableHead>
+                    <TableHead>Categoria</TableHead>
+                    <TableHead>Data Criação</TableHead>
+                    <TableHead>Ações</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {ticketsAtivos.map((ticket) => (
+                    <TableRow key={ticket.id}>
+                      <TableCell className="font-medium">{ticket.id}</TableCell>
+                      <TableCell>
+                        <div>
+                          <div className="font-medium">{ticket.titulo}</div>
+                          <div className="text-sm text-muted-foreground truncate max-w-xs">
+                            {ticket.descricao}
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="secondary" className={statusColors[ticket.status]}>
+                          {ticket.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="secondary" className={priorityColors[ticket.prioridade]}>
+                          {ticket.prioridade}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>{ticket.categoria}</TableCell>
+                      <TableCell>{new Date(ticket.dataCriacao).toLocaleDateString('pt-BR')}</TableCell>
+                      <TableCell>
+                        <div className="flex gap-2">
+                          <Button variant="outline" size="sm">
+                            <Eye className="h-4 w-4" />
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => handleEditTicket(ticket.id)}
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+
+              {ticketsAtivos.length === 0 && (
+                <div className="text-center py-8 text-muted-foreground">
+                  Nenhum chamado ativo encontrado.
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="finalizados">
+          <Card>
+            <CardHeader>
+              <CardTitle>Chamados Finalizados</CardTitle>
+              <CardDescription>
+                Histórico de chamados resolvidos e fechados ({ticketsFinalizados.length})
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>ID</TableHead>
+                    <TableHead>Título</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Prioridade</TableHead>
+                    <TableHead>Categoria</TableHead>
+                    <TableHead>Data Criação</TableHead>
+                    <TableHead>Data Finalização</TableHead>
+                    <TableHead>Ações</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {ticketsFinalizados.map((ticket) => (
+                    <TableRow key={ticket.id}>
+                      <TableCell className="font-medium">{ticket.id}</TableCell>
+                      <TableCell>
+                        <div>
+                          <div className="font-medium">{ticket.titulo}</div>
+                          <div className="text-sm text-muted-foreground truncate max-w-xs">
+                            {ticket.descricao}
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="secondary" className={statusColors[ticket.status]}>
+                          {ticket.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="secondary" className={priorityColors[ticket.prioridade]}>
+                          {ticket.prioridade}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>{ticket.categoria}</TableCell>
+                      <TableCell>{new Date(ticket.dataCriacao).toLocaleDateString('pt-BR')}</TableCell>
+                      <TableCell>{new Date(ticket.dataAtualizacao).toLocaleDateString('pt-BR')}</TableCell>
+                      <TableCell>
+                        <div className="flex gap-2">
+                          <Button variant="outline" size="sm">
+                            <Eye className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+
+              {ticketsFinalizados.length === 0 && (
+                <div className="text-center py-8 text-muted-foreground">
+                  Nenhum chamado finalizado encontrado.
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
