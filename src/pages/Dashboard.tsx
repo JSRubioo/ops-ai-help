@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -73,6 +74,7 @@ const statusColors = {
 };
 
 export default function Dashboard() {
+  const navigate = useNavigate();
   const [filterPriority, setFilterPriority] = useState<string>("all");
   const [filterStatus, setFilterStatus] = useState<string>("all");
 
@@ -98,7 +100,12 @@ export default function Dashboard() {
           <p className="text-lg opacity-90 mb-6">
             Gerencie todos os tickets de suporte da sua empresa de forma eficiente
           </p>
-          <Button size="lg" variant="secondary" className="bg-white text-primary hover:bg-white/90">
+          <Button 
+            size="lg" 
+            variant="secondary" 
+            className="bg-white text-primary hover:bg-white/90"
+            onClick={() => navigate("/novo-ticket")}
+          >
             <TicketPlus className="mr-2 h-5 w-5" />
             Abrir Novo Ticket
           </Button>
