@@ -114,6 +114,10 @@ export default function PesquisarTickets() {
     navigate(`/editar-ticket/${ticketId}`);
   };
 
+  const handleViewTicket = (ticketId: string) => {
+    navigate(`/visualizar-ticket/${ticketId}`);
+  };
+
   return (
     <div className="p-6 space-y-6">
       <div>
@@ -332,7 +336,7 @@ export default function PesquisarTickets() {
                           <Button 
                             variant="outline" 
                             size="sm"
-                            onClick={() => handleEditTicket(ticket.id)}
+                            onClick={() => handleViewTicket(ticket.id)}
                           >
                             <Eye className="h-4 w-4" />
                           </Button>
