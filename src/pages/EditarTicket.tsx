@@ -135,10 +135,10 @@ export default function EditarTicket() {
         
         <div>
           <h1 className="text-3xl font-bold tracking-tight">
-            Editar Chamado {ticket.id}
+            Gerenciar Chamado {ticket.id}
           </h1>
           <p className="text-muted-foreground mt-2">
-            Atualize as informações do seu chamado
+            Altere o status e adicione comentários ao chamado
           </p>
         </div>
       </div>
@@ -149,7 +149,7 @@ export default function EditarTicket() {
             <CardHeader>
               <CardTitle>Informações do Chamado</CardTitle>
               <CardDescription>
-                Edite os detalhes do seu chamado abaixo
+                Visualize os detalhes do chamado (somente leitura)
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -158,7 +158,8 @@ export default function EditarTicket() {
                 <Input
                   id="titulo"
                   value={ticket.titulo}
-                  onChange={(e) => setTicket({...ticket, titulo: e.target.value})}
+                  readOnly
+                  className="bg-muted cursor-not-allowed"
                 />
               </div>
 
@@ -167,58 +168,34 @@ export default function EditarTicket() {
                 <Textarea
                   id="descricao"
                   value={ticket.descricao}
-                  onChange={(e) => setTicket({...ticket, descricao: e.target.value})}
+                  readOnly
                   rows={4}
+                  className="bg-muted cursor-not-allowed resize-none"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label>Categoria</Label>
-                  <Select
+                  <Input
                     value={ticket.categoria}
-                    onValueChange={(value) => setTicket({...ticket, categoria: value})}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Sistema">Sistema</SelectItem>
-                      <SelectItem value="Hardware">Hardware</SelectItem>
-                      <SelectItem value="Software">Software</SelectItem>
-                      <SelectItem value="Rede">Rede</SelectItem>
-                      <SelectItem value="Acesso">Acesso</SelectItem>
-                      <SelectItem value="Outros">Outros</SelectItem>
-                    </SelectContent>
-                  </Select>
+                    readOnly
+                    className="bg-muted cursor-not-allowed"
+                  />
                 </div>
 
                 <div className="space-y-2">
                   <Label>Prioridade</Label>
-                  <Select
-                    value={ticket.prioridade}
-                    onValueChange={(value: "Crítica" | "Alta" | "Média" | "Baixa") => 
-                      setTicket({...ticket, prioridade: value})
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Baixa">Baixa</SelectItem>
-                      <SelectItem value="Média">Média</SelectItem>
-                      <SelectItem value="Alta">Alta</SelectItem>
-                      <SelectItem value="Crítica">Crítica</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <div className="flex items-center h-10 px-3 border rounded-md bg-muted">
+                    <Badge variant="secondary" className={priorityColors[ticket.prioridade]}>
+                      {ticket.prioridade}
+                    </Badge>
+                  </div>
                 </div>
               </div>
 
-              <div className="flex justify-end">
-                <Button onClick={handleSalvar} className="flex items-center gap-2">
-                  <Save className="h-4 w-4" />
-                  Salvar Alterações
-                </Button>
+              <div className="text-sm text-muted-foreground bg-blue-50/50 dark:bg-blue-950/50 p-3 rounded-md border-l-4 border-blue-400">
+                <p><strong>Nota:</strong> O título, descrição, categoria e prioridade não podem ser alterados após a criação do chamado. Você pode alterar apenas o status e adicionar comentários.</p>
               </div>
             </CardContent>
           </Card>
@@ -328,6 +305,11 @@ export default function EditarTicket() {
                   {ticket.prioridade}
                 </Badge>
               </div>
+
+              <Button onClick={handleSalvar} className="w-full flex items-center gap-2">
+                <Save className="h-4 w-4" />
+                Salvar Status
+              </Button>
             </CardContent>
           </Card>
 
