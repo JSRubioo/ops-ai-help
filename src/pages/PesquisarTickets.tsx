@@ -257,9 +257,6 @@ export default function PesquisarTickets() {
                       <TableCell>{new Date(ticket.dataCriacao).toLocaleDateString('pt-BR')}</TableCell>
                       <TableCell>
                         <div className="flex gap-2">
-                          <Button variant="outline" size="sm">
-                            <Eye className="h-4 w-4" />
-                          </Button>
                           <Button 
                             variant="outline" 
                             size="sm"
@@ -332,7 +329,11 @@ export default function PesquisarTickets() {
                       <TableCell>{new Date(ticket.dataAtualizacao).toLocaleDateString('pt-BR')}</TableCell>
                       <TableCell>
                         <div className="flex gap-2">
-                          <Button variant="outline" size="sm">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => handleEditTicket(ticket.id)}
+                          >
                             <Eye className="h-4 w-4" />
                           </Button>
                         </div>
