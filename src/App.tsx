@@ -13,6 +13,7 @@ import EditarTicket from "./pages/EditarTicket";
 import VisualizarTicket from "./pages/VisualizarTicket";
 import Usuarios from "./pages/Usuarios";
 import Perfil from "./pages/Perfil";
+import Configuracoes from "./pages/Configuracoes";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -34,7 +35,7 @@ const App = () => (
             <Route path="/relatorios" element={<Relatorios />} />
             <Route path="/usuarios" element={<Usuarios />} />
             <Route path="/perfil" element={<Perfil />} />
-            <Route path="/configuracoes" element={<Dashboard />} />
+            <Route path="/configuracoes" element={<Configuracoes />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
