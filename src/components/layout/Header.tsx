@@ -1,4 +1,4 @@
-import { Bell, User, Clock, CheckCircle, Settings } from "lucide-react";
+import { Bell, User, Clock, CheckCircle, Settings, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import {
@@ -11,8 +11,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
 export function Header() {
+  const { toast } = useToast();
+  const navigate = useNavigate();
+  
   const [notifications, setNotifications] = useState([
     {
       id: 1,
@@ -56,6 +61,24 @@ export function Header() {
     setNotifications(prev => 
       prev.map(notification => ({ ...notification, read: true }))
     );
+  };
+
+  const handleLogout = () => {
+    // Limpar dados de sessão
+    localStorage.clear();
+    sessionStorage.clear();
+    
+    // Mostrar mensagem de confirmação
+    toast({
+      title: "Logout realizado",
+      description: "Você foi desconectado com sucesso.",
+    });
+    
+    // Redirecionar para o dashboard ou página inicial
+    navigate('/');
+    
+    // Recarregar a página para limpar o estado da aplicação
+    window.location.reload();
   };
 
   return (
@@ -175,7 +198,8 @@ export function Header() {
                 <span>Configurações</span>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={handleLogout}>
+                <LogOut className="mr-2 h-4 w-4" />
                 <span>Sair</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
