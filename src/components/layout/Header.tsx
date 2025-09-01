@@ -74,11 +74,8 @@ export function Header() {
       description: "Você foi desconectado com sucesso.",
     });
     
-    // Redirecionar para o dashboard ou página inicial
-    navigate('/');
-    
-    // Recarregar a página para limpar o estado da aplicação
-    window.location.reload();
+    // Redirecionar para a tela de login
+    navigate('/login');
   };
 
   return (
