@@ -12,6 +12,10 @@ export default function Login() {
   const { toast } = useToast();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [resetName, setResetName] = useState("");
+  const [resetEmail, setResetEmail] = useState("");
+  const [resetSent, setResetSent] = useState(false);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,6 +28,21 @@ export default function Login() {
     
     // Redirecionar para o dashboard
     navigate('/');
+  };
+
+  const handleForgotPassword = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Simular envio de email de reset
+    setResetSent(true);
+    
+    // Resetar formulário após 3 segundos
+    setTimeout(() => {
+      setResetSent(false);
+      setShowForgotPassword(false);
+      setResetName("");
+      setResetEmail("");
+    }, 3000);
   };
 
   return (
@@ -42,47 +61,134 @@ export default function Login() {
         </CardHeader>
         
         <CardContent>
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="seu@email.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="pl-10"
-                  required
-                />
+          {!showForgotPassword ? (
+            <>
+              <form onSubmit={handleLogin} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email</Label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="seu@email.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="pl-10"
+                      required
+                    />
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="password">Senha</Label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                    <Input
+                      id="password"
+                      type="password"
+                      placeholder="••••••••"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="pl-10"
+                      required
+                    />
+                  </div>
+                </div>
+                
+                <Button 
+                  type="submit" 
+                  className="w-full"
+                  size="lg"
+                >
+                  Entrar
+                </Button>
+              </form>
+              
+              <div className="mt-4 text-center">
+                <Button
+                  type="button"
+                  variant="link"
+                  onClick={() => setShowForgotPassword(true)}
+                  className="text-sm text-muted-foreground hover:text-primary"
+                >
+                  Esqueci a senha
+                </Button>
               </div>
+            </>
+          ) : (
+            <div className="space-y-4">
+              {!resetSent ? (
+                <>
+                  <div className="text-center mb-4">
+                    <h3 className="text-lg font-semibold">Redefinir Senha</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Preencha os campos abaixo para receber o link de redefinição
+                    </p>
+                  </div>
+                  
+                  <form onSubmit={handleForgotPassword} className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="reset-name">Nome</Label>
+                      <Input
+                        id="reset-name"
+                        type="text"
+                        placeholder="Seu nome completo"
+                        value={resetName}
+                        onChange={(e) => setResetName(e.target.value)}
+                        required
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="reset-email">Email</Label>
+                      <div className="relative">
+                        <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                        <Input
+                          id="reset-email"
+                          type="email"
+                          placeholder="seu@email.com"
+                          value={resetEmail}
+                          onChange={(e) => setResetEmail(e.target.value)}
+                          className="pl-10"
+                          required
+                        />
+                      </div>
+                    </div>
+                    
+                    <Button 
+                      type="submit" 
+                      className="w-full"
+                      size="lg"
+                    >
+                      Enviar
+                    </Button>
+                  </form>
+                  
+                  <div className="text-center">
+                    <Button
+                      type="button"
+                      variant="link"
+                      onClick={() => setShowForgotPassword(false)}
+                      className="text-sm text-muted-foreground hover:text-primary"
+                    >
+                      Voltar ao login
+                    </Button>
+                  </div>
+                </>
+              ) : (
+                <div className="text-center py-6">
+                  <div className="mx-auto w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                    <Mail className="w-6 h-6 text-green-600" />
+                  </div>
+                  <h3 className="text-lg font-semibold mb-2">Email Enviado!</h3>
+                  <p className="text-sm text-muted-foreground">
+                    O link para redefinição de senha foi enviado para seu email
+                  </p>
+                </div>
+              )}
             </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="password">Senha</Label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="pl-10"
-                  required
-                />
-              </div>
-            </div>
-            
-            <Button 
-              type="submit" 
-              className="w-full"
-              size="lg"
-            >
-              Entrar
-            </Button>
-          </form>
+          )}
           
           <div className="mt-6 text-center text-sm text-muted-foreground">
             <p>Sistema de Gerenciamento de Tickets</p>
