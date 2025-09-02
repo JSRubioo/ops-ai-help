@@ -14,7 +14,7 @@ export default function Perfil() {
     nome: "Admin User",
     email: "admin@empresa.com",
     cargo: "Administrador do Sistema",
-    departamento: "TI",
+    departamento: "Tecnologia da Informação",
     telefone: "(11) 99999-9999",
     dataIngresso: "Janeiro 2023",
     localizacao: "São Paulo, SP",

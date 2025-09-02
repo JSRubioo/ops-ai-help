@@ -20,21 +20,21 @@ const priorities = [
   { 
     value: "critica", 
     label: "Crítica", 
-    description: "Afeta setor inteiro", 
+    description: "Afeta todo o setor", 
     color: "bg-priority-critical text-white",
     bgColor: "bg-priority-critical-bg"
   },
   { 
     value: "alta", 
     label: "Alta", 
-    description: "Afeta usuário e talvez parcela do setor", 
+    description: "Afeta usuário e parte do setor", 
     color: "bg-priority-high text-white",
     bgColor: "bg-priority-high-bg"
   },
   { 
     value: "media", 
     label: "Média", 
-    description: "Incapaz de realizar o serviço", 
+    description: "Impede a realização do serviço", 
     color: "bg-priority-medium text-white",
     bgColor: "bg-priority-medium-bg"
   },
@@ -61,8 +61,8 @@ export default function NovoTicket() {
     category: "",
     priority: "",
     description: "",
-    user: "João Silva", // Mock user
-    department: "TI" // Mock department
+    user: "Admin User", // Usuário simulado
+    department: "Tecnologia da Informação" // Departamento simulado
   });
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -111,8 +111,8 @@ export default function NovoTicket() {
       category: "",
       priority: "",
       description: "",
-      user: "João Silva",
-      department: "TI"
+      user: "Admin User",
+      department: "Tecnologia da Informação"
     });
     setShowSuggestions(false);
   };

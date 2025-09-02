@@ -136,7 +136,7 @@ export default function Dashboard() {
           <CardContent>
             <div className="text-2xl font-bold text-warning">23</div>
             <p className="text-xs text-muted-foreground">
-              8 críticos, 15 alta prioridade
+              8 críticos, 15 de alta prioridade
             </p>
           </CardContent>
         </Card>
@@ -149,7 +149,7 @@ export default function Dashboard() {
           <CardContent>
             <div className="text-2xl font-bold text-success">104</div>
             <p className="text-xs text-muted-foreground">
-              Tempo médio: 2.5 horas
+              Tempo médio de resolução: 2.5 horas
             </p>
           </CardContent>
         </Card>

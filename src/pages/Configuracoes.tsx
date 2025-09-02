@@ -226,7 +226,7 @@ export default function Configuracoes() {
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="ticketTimeout">Timeout de Ticket (horas)</Label>
+                  <Label htmlFor="ticketTimeout">Tempo Limite de Ticket (horas)</Label>
                   <Input
                     id="ticketTimeout"
                     type="number"
@@ -358,7 +358,7 @@ export default function Configuracoes() {
                   <h3 className="text-lg font-medium">Sessões</h3>
                   <div className="space-y-3">
                     <div className="space-y-2">
-                      <Label>Timeout de Sessão (minutos)</Label>
+                      <Label>Tempo Limite de Sessão (minutos)</Label>
                       <Input type="number" defaultValue="30" />
                     </div>
                     <div className="flex items-center justify-between">

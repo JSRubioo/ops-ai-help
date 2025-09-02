@@ -34,7 +34,7 @@ const faqCategories = [
     items: [
       {
         question: "Meu computador não liga, o que fazer?",
-        answer: "Primeiro, verifique se o cabo de energia está conectado corretamente tanto no computador quanto na tomada. Teste a tomada com outro equipamento. Se o problema persistir, abra um ticket de prioridade Alta."
+        answer: "Primeiro, verifique se o cabo de energia está conectado corretamente tanto no computador quanto na tomada. Teste a tomada com outro equipamento. Se o problema persistir, abra um ticket com prioridade Alta."
       },
       {
         question: "A impressora não está funcionando",
@@ -54,7 +54,7 @@ const faqCategories = [
     items: [
       {
         question: "O sistema está muito lento",
-        answer: "Feche programas desnecessários, reinicie o computador, verifique se há atualizações pendentes. Se o problema persistir em múltiplos usuários, abra um ticket de prioridade Crítica."
+        answer: "Feche programas desnecessários, reinicie o computador e verifique se há atualizações pendentes. Se o problema persistir em múltiplos usuários, abra um ticket com prioridade Crítica."
       },
       {
         question: "Não consigo acessar um sistema específico",
@@ -62,7 +62,7 @@ const faqCategories = [
       },
       {
         question: "Perdi um arquivo importante",
-        answer: "Verifique a lixeira do sistema, procure em outras pastas onde o arquivo poderia estar. Se você tem backup automático, verifique as versões anteriores. Abra um ticket de prioridade Alta para recuperação de dados."
+        answer: "Verifique a lixeira do sistema e procure em outras pastas onde o arquivo poderia estar. Se você possui backup automático, verifique as versões anteriores. Abra um ticket com prioridade Alta para recuperação de dados."
       }
     ]
   },
@@ -74,11 +74,11 @@ const faqCategories = [
     items: [
       {
         question: "Esqueci minha senha",
-        answer: "Use a opção 'Esqueci minha senha' na tela de login. Se não funcionar, entre em contato com o suporte através de um ticket de prioridade Média informando seu usuário e setor."
+        answer: "Use a opção 'Esqueci minha senha' na tela de login. Se não funcionar, entre em contato com o suporte através de um ticket com prioridade Média informando seu usuário e setor."
       },
       {
         question: "Minha conta foi bloqueada",
-        answer: "Contas são bloqueadas automaticamente após 5 tentativas de login incorretas. Aguarde 30 minutos ou abra um ticket de prioridade Alta para desbloqueio imediato."
+        answer: "Contas são bloqueadas automaticamente após 5 tentativas de login incorretas. Aguarde 30 minutos ou abra um ticket com prioridade Alta para desbloqueio imediato."
       },
       {
         question: "Preciso de acesso a um novo sistema",
