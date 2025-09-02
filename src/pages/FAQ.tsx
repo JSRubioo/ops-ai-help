@@ -100,10 +100,10 @@ export default function FAQ() {
   })).filter(category => category.items.length > 0);
 
   return (
-    <div className="p-6 max-w-6xl mx-auto space-y-6">
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-primary mb-2">Perguntas Frequentes</h1>
-        <p className="text-muted-foreground text-lg">
+    <div className="max-w-6xl mx-auto space-y-4 md:space-y-6">
+      <div className="text-center mb-6 md:mb-8 px-4">
+        <h1 className="text-2xl md:text-3xl font-bold text-primary mb-2">Perguntas Frequentes</h1>
+        <p className="text-sm md:text-base lg:text-lg text-muted-foreground">
           Encontre respostas rápidas para os problemas mais comuns
         </p>
       </div>

@@ -46,21 +46,21 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted/20 p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center space-y-4">
-          <div className="mx-auto w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
-            <UserCheck className="w-6 h-6 text-primary" />
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted/20 p-3 md:p-4">
+      <Card className="w-full max-w-sm md:max-w-md">
+        <CardHeader className="text-center space-y-4 p-4 md:p-6">
+          <div className="mx-auto w-10 h-10 md:w-12 md:h-12 bg-primary/10 rounded-full flex items-center justify-center">
+            <UserCheck className="w-5 h-5 md:w-6 md:h-6 text-primary" />
           </div>
           <div>
-            <CardTitle className="text-2xl font-bold">Sistema HelpDesk</CardTitle>
-            <CardDescription className="text-muted-foreground">
+            <CardTitle className="text-xl md:text-2xl font-bold">Sistema HelpDesk</CardTitle>
+            <CardDescription className="text-sm md:text-base text-muted-foreground">
               Faça login para acessar o sistema
             </CardDescription>
           </div>
         </CardHeader>
         
-        <CardContent>
+        <CardContent className="p-4 md:p-6">
           {!showForgotPassword ? (
             <>
               <form onSubmit={handleLogin} className="space-y-4">
@@ -190,7 +190,7 @@ export default function Login() {
             </div>
           )}
           
-          <div className="mt-6 text-center text-sm text-muted-foreground">
+          <div className="mt-4 md:mt-6 text-center text-xs md:text-sm text-muted-foreground">
             <p>Sistema de Gerenciamento de Tickets</p>
             <p className="text-xs mt-1">v1.0 - Acesso Administrativo</p>
           </div>

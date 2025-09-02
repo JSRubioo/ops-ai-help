@@ -85,7 +85,7 @@ export default function Dashboard() {
   });
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-4 md:space-y-6">
       {/* Hero Section */}
       <div className="relative rounded-xl overflow-hidden bg-gradient-hero text-white">
         <div className="absolute inset-0">
@@ -95,33 +95,33 @@ export default function Dashboard() {
             className="w-full h-full object-cover opacity-20"
           />
         </div>
-        <div className="relative p-8">
-          <h1 className="text-3xl font-bold mb-2">Central de HelpDesk</h1>
-          <p className="text-lg opacity-90 mb-6">
+        <div className="relative p-4 md:p-6 lg:p-8">
+          <h1 className="text-xl md:text-2xl lg:text-3xl font-bold mb-2">Central de HelpDesk</h1>
+          <p className="text-sm md:text-base lg:text-lg opacity-90 mb-4 md:mb-6">
             Gerencie todos os tickets de suporte da sua empresa de forma eficiente
           </p>
           <Button 
             size="lg" 
             variant="secondary" 
-            className="bg-white text-primary hover:bg-white/90"
+            className="bg-white text-primary hover:bg-white/90 w-full sm:w-auto"
             onClick={() => navigate("/novo-ticket")}
           >
-            <TicketPlus className="mr-2 h-5 w-5" />
-            Abrir Novo Ticket
+            <TicketPlus className="mr-2 h-4 w-4 md:h-5 md:w-5" />
+            <span className="text-sm md:text-base">Abrir Novo Ticket</span>
           </Button>
         </div>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-6">
         <Card className="shadow-card hover:shadow-card-hover transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total de Tickets</CardTitle>
-            <TicketPlus className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-xs md:text-sm font-medium">Total de Tickets</CardTitle>
+            <TicketPlus className="h-3 w-3 md:h-4 md:w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-primary">127</div>
-            <p className="text-xs text-muted-foreground">
+            <div className="text-lg md:text-xl lg:text-2xl font-bold text-primary">127</div>
+            <p className="text-xs text-muted-foreground hidden sm:block">
               <TrendingUp className="inline h-3 w-3 mr-1" />
               +12% desde semana passada
             </p>
@@ -130,12 +130,12 @@ export default function Dashboard() {
 
         <Card className="shadow-card hover:shadow-card-hover transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Em Aberto</CardTitle>
-            <Clock className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-xs md:text-sm font-medium">Em Aberto</CardTitle>
+            <Clock className="h-3 w-3 md:h-4 md:w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-warning">23</div>
-            <p className="text-xs text-muted-foreground">
+            <div className="text-lg md:text-xl lg:text-2xl font-bold text-warning">23</div>
+            <p className="text-xs text-muted-foreground hidden sm:block">
               8 críticos, 15 de alta prioridade
             </p>
           </CardContent>
@@ -143,12 +143,12 @@ export default function Dashboard() {
 
         <Card className="shadow-card hover:shadow-card-hover transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Resolvidos</CardTitle>
-            <CheckCircle className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-xs md:text-sm font-medium">Resolvidos</CardTitle>
+            <CheckCircle className="h-3 w-3 md:h-4 md:w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-success">104</div>
-            <p className="text-xs text-muted-foreground">
+            <div className="text-lg md:text-xl lg:text-2xl font-bold text-success">104</div>
+            <p className="text-xs text-muted-foreground hidden sm:block">
               Tempo médio de resolução: 2.5 horas
             </p>
           </CardContent>
@@ -156,12 +156,12 @@ export default function Dashboard() {
 
         <Card className="shadow-card hover:shadow-card-hover transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Usuários Ativos</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-xs md:text-sm font-medium">Usuários Ativos</CardTitle>
+            <Users className="h-3 w-3 md:h-4 md:w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-primary">45</div>
-            <p className="text-xs text-muted-foreground">
+            <div className="text-lg md:text-xl lg:text-2xl font-bold text-primary">45</div>
+            <p className="text-xs text-muted-foreground hidden sm:block">
               Conectados agora
             </p>
           </CardContent>
@@ -171,14 +171,14 @@ export default function Dashboard() {
       {/* Tickets Table */}
       <Card className="shadow-card">
         <CardHeader>
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="flex flex-col gap-4">
             <div>
-              <CardTitle className="text-xl">Tickets Recentes</CardTitle>
-              <CardDescription>Gerencie e acompanhe todos os tickets de suporte</CardDescription>
+              <CardTitle className="text-lg md:text-xl">Tickets Recentes</CardTitle>
+              <CardDescription className="text-sm">Gerencie e acompanhe todos os tickets de suporte</CardDescription>
             </div>
-            <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row gap-2">
               <Select value={filterPriority} onValueChange={setFilterPriority}>
-                <SelectTrigger className="w-[140px]">
+                <SelectTrigger className="w-full sm:w-[140px]">
                   <Filter className="mr-2 h-4 w-4" />
                   <SelectValue placeholder="Prioridade" />
                 </SelectTrigger>
@@ -191,7 +191,7 @@ export default function Dashboard() {
                 </SelectContent>
               </Select>
               <Select value={filterStatus} onValueChange={setFilterStatus}>
-                <SelectTrigger className="w-[140px]">
+                <SelectTrigger className="w-full sm:w-[140px]">
                   <SelectValue placeholder="Status" />
                 </SelectTrigger>
                 <SelectContent>
@@ -206,28 +206,28 @@ export default function Dashboard() {
         </CardHeader>
         <CardContent className="p-0">
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full min-w-[800px]">
               <thead className="border-b bg-muted/50">
                 <tr>
-                  <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
+                  <th className="h-10 md:h-12 px-2 md:px-4 text-left align-middle font-medium text-muted-foreground text-xs md:text-sm">
                     Protocolo
                   </th>
-                  <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
+                  <th className="h-10 md:h-12 px-2 md:px-4 text-left align-middle font-medium text-muted-foreground text-xs md:text-sm">
                     Título
                   </th>
-                  <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
+                  <th className="h-10 md:h-12 px-2 md:px-4 text-left align-middle font-medium text-muted-foreground text-xs md:text-sm hidden sm:table-cell">
                     Categoria
                   </th>
-                  <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
+                  <th className="h-10 md:h-12 px-2 md:px-4 text-left align-middle font-medium text-muted-foreground text-xs md:text-sm">
                     Prioridade
                   </th>
-                  <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
+                  <th className="h-10 md:h-12 px-2 md:px-4 text-left align-middle font-medium text-muted-foreground text-xs md:text-sm">
                     Status
                   </th>
-                  <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
+                  <th className="h-10 md:h-12 px-2 md:px-4 text-left align-middle font-medium text-muted-foreground text-xs md:text-sm hidden md:table-cell">
                     Usuário
                   </th>
-                  <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
+                  <th className="h-10 md:h-12 px-2 md:px-4 text-left align-middle font-medium text-muted-foreground text-xs md:text-sm hidden lg:table-cell">
                     Setor
                   </th>
                 </tr>
@@ -235,32 +235,32 @@ export default function Dashboard() {
               <tbody>
                 {filteredTickets.map((ticket) => (
                   <tr key={ticket.id} className="border-b hover:bg-muted/50 transition-colors">
-                    <td className="h-12 px-4 align-middle">
-                      <code className="font-mono text-sm bg-muted px-2 py-1 rounded">
+                    <td className="h-10 md:h-12 px-2 md:px-4 align-middle">
+                      <code className="font-mono text-xs md:text-sm bg-muted px-1 md:px-2 py-1 rounded">
                         {ticket.id}
                       </code>
                     </td>
-                    <td className="h-12 px-4 align-middle">
-                      <div className="font-medium">{ticket.title}</div>
-                      <div className="text-sm text-muted-foreground">{ticket.created}</div>
+                    <td className="h-10 md:h-12 px-2 md:px-4 align-middle">
+                      <div className="font-medium text-xs md:text-sm truncate max-w-[150px] md:max-w-none">{ticket.title}</div>
+                      <div className="text-xs text-muted-foreground">{ticket.created}</div>
                     </td>
-                    <td className="h-12 px-4 align-middle">
-                      <Badge variant="outline">{ticket.category}</Badge>
+                    <td className="h-10 md:h-12 px-2 md:px-4 align-middle hidden sm:table-cell">
+                      <Badge variant="outline" className="text-xs">{ticket.category}</Badge>
                     </td>
-                    <td className="h-12 px-4 align-middle">
+                    <td className="h-10 md:h-12 px-2 md:px-4 align-middle">
                       <Badge 
-                        className={priorityColorsBg[ticket.priority as keyof typeof priorityColorsBg]}
+                        className={`text-xs ${priorityColorsBg[ticket.priority as keyof typeof priorityColorsBg]}`}
                       >
                         {ticket.priority}
                       </Badge>
                     </td>
-                    <td className="h-12 px-4 align-middle">
-                      <Badge className={statusColors[ticket.status as keyof typeof statusColors]}>
+                    <td className="h-10 md:h-12 px-2 md:px-4 align-middle">
+                      <Badge className={`text-xs ${statusColors[ticket.status as keyof typeof statusColors]}`}>
                         {ticket.status}
                       </Badge>
                     </td>
-                    <td className="h-12 px-4 align-middle">{ticket.user}</td>
-                    <td className="h-12 px-4 align-middle">{ticket.department}</td>
+                    <td className="h-10 md:h-12 px-2 md:px-4 align-middle hidden md:table-cell text-sm">{ticket.user}</td>
+                    <td className="h-10 md:h-12 px-2 md:px-4 align-middle hidden lg:table-cell text-sm">{ticket.department}</td>
                   </tr>
                 ))}
               </tbody>

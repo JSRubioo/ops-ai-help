@@ -79,20 +79,20 @@ export function Header() {
   };
 
   return (
-    <header className="h-16 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
-      <div className="flex h-full items-center justify-between px-4">
-        <div className="flex items-center gap-4">
-          <SidebarTrigger className="h-8 w-8" />
-          <div className="flex items-center gap-2">
-            <div className="font-semibold text-primary">Sistema HelpDesk</div>
-            <div className="text-sm text-muted-foreground">v1.0</div>
+    <header className="h-14 md:h-16 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
+      <div className="flex h-full items-center justify-between px-3 md:px-6">
+        <div className="flex items-center gap-2 md:gap-4 min-w-0">
+          <SidebarTrigger className="h-8 w-8 flex-shrink-0" />
+          <div className="flex items-center gap-2 min-w-0">
+            <div className="font-semibold text-primary text-sm md:text-base truncate">Sistema HelpDesk</div>
+            <div className="text-xs md:text-sm text-muted-foreground hidden sm:block">v1.0</div>
           </div>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 md:gap-4">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="relative">
+              <Button variant="ghost" size="icon" className="relative h-8 w-8 md:h-10 md:w-10">
                 <Bell className="h-4 w-4" />
                 {unreadCount > 0 && (
                   <span className="absolute -top-1 -right-1 h-3 w-3 bg-destructive rounded-full text-xs flex items-center justify-center text-white">
@@ -101,7 +101,7 @@ export function Header() {
                 )}
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-80" align="end" forceMount>
+            <DropdownMenuContent className="w-72 md:w-80" align="end" forceMount>
               <DropdownMenuLabel className="flex items-center justify-between">
                 <span>Notificações</span>
                 {unreadCount > 0 && (
