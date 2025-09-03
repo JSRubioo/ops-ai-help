@@ -16,6 +16,12 @@ const categories = [
   { value: "acessos", label: "Acessos", description: "Problemas de login e permissões" }
 ];
 
+const tiSubcategories = [
+  { value: "ti-hardware", label: "TI - Hardware", description: "Equipamentos de TI (servidores, switches, etc.)" },
+  { value: "ti-software", label: "TI - Software", description: "Sistemas corporativos e aplicações" },
+  { value: "ti-acessos", label: "TI - Acessos", description: "Permissões e controle de acesso" }
+];
+
 const priorities = [
   { 
     value: "critica", 
@@ -177,16 +183,26 @@ export default function NovoTicket() {
                       <SelectTrigger className="text-sm">
                         <SelectValue placeholder="Selecione a categoria" />
                       </SelectTrigger>
-                      <SelectContent>
-                        {categories.map((category) => (
-                          <SelectItem key={category.value} value={category.value}>
-                            <div>
-                              <div className="font-medium text-sm">{category.label}</div>
-                              <div className="text-xs text-muted-foreground">{category.description}</div>
-                            </div>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
+                       <SelectContent>
+                         {categories.map((category) => (
+                           <SelectItem key={category.value} value={category.value}>
+                             <div>
+                               <div className="font-medium text-sm">{category.label}</div>
+                               <div className="text-xs text-muted-foreground">{category.description}</div>
+                             </div>
+                           </SelectItem>
+                         ))}
+                         <div className="h-px bg-border my-2"></div>
+                         <div className="px-2 pb-1 text-xs font-medium text-muted-foreground">Setor TI</div>
+                         {tiSubcategories.map((category) => (
+                           <SelectItem key={category.value} value={category.value}>
+                             <div>
+                               <div className="font-medium text-sm">{category.label}</div>
+                               <div className="text-xs text-muted-foreground">{category.description}</div>
+                             </div>
+                           </SelectItem>
+                         ))}
+                       </SelectContent>
                     </Select>
                   </div>
 
