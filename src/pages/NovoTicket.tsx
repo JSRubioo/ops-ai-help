@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,7 +8,10 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Lightbulb, Send, User, Building } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Progress } from "@/components/ui/progress";
+import { Lightbulb, Send, User, Building, AlertTriangle, CheckCircle, X, HelpCircle, ArrowLeft, Save } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 const categories = [
   { value: "hardware", label: "Hardware", description: "Problemas com equipamentos físicos" },
@@ -26,30 +30,30 @@ const priorities = [
   { 
     value: "critica", 
     label: "Crítica", 
-    description: "Afeta todo o setor", 
-    color: "bg-priority-critical text-white",
-    bgColor: "bg-priority-critical-bg"
+    description: "Sistema parado, produção afetada", 
+    color: "bg-red-500",
+    bgColor: "bg-red-50 border border-red-200 text-red-800"
   },
   { 
     value: "alta", 
     label: "Alta", 
-    description: "Afeta usuário e parte do setor", 
-    color: "bg-priority-high text-white",
-    bgColor: "bg-priority-high-bg"
+    description: "Funcionalidade importante não funciona", 
+    color: "bg-orange-500",
+    bgColor: "bg-orange-50 border border-orange-200 text-orange-800"
   },
   { 
     value: "media", 
     label: "Média", 
-    description: "Impede a realização do serviço", 
-    color: "bg-priority-medium text-white",
-    bgColor: "bg-priority-medium-bg"
+    description: "Problema que pode esperar algumas horas", 
+    color: "bg-yellow-500",
+    bgColor: "bg-yellow-50 border border-yellow-200 text-yellow-800"
   },
   { 
     value: "baixa", 
     label: "Baixa", 
-    description: "Dificuldade para realizar o serviço", 
-    color: "bg-priority-low text-white",
-    bgColor: "bg-priority-low-bg"
+    description: "Melhoria ou problema menor", 
+    color: "bg-green-500",
+    bgColor: "bg-green-50 border border-green-200 text-green-800"
   }
 ];
 
@@ -62,16 +66,77 @@ const mockSuggestions = [
 
 export default function NovoTicket() {
   const { toast } = useToast();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [progress, setProgress] = useState(0);
+  
   const [formData, setFormData] = useState({
     title: "",
     category: "",
     priority: "",
     description: "",
-    user: "Admin User", // Usuário simulado
-    department: "Tecnologia da Informação" // Departamento simulado
+    user: "Admin User", 
+    department: "Tecnologia da Informação",
+    email: "",
+    phone: ""
   });
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+
+  // Auto-save draft - Heurística 3: Controle e liberdade do usuário
+  useEffect(() => {
+    const savedDraft = localStorage.getItem('ticket-draft');
+    if (savedDraft) {
+      const parsed = JSON.parse(savedDraft);
+      setFormData({ ...formData, ...parsed });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (formData.title || formData.description) {
+      localStorage.setItem('ticket-draft', JSON.stringify(formData));
+    }
+  }, [formData]);
+
+  // Calculate form completion progress
+  useEffect(() => {
+    const requiredFields = ['title', 'description', 'category', 'priority'];
+    const completedFields = requiredFields.filter(field => formData[field as keyof typeof formData]);
+    setProgress((completedFields.length / requiredFields.length) * 100);
+  }, [formData]);
+
+  // Validation - Heurística 5: Prevenção de erros
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+
+    if (!formData.title.trim()) {
+      newErrors.title = "Título é obrigatório";
+    } else if (formData.title.length < 5) {
+      newErrors.title = "Título deve ter pelo menos 5 caracteres";
+    }
+
+    if (!formData.description.trim()) {
+      newErrors.description = "Descrição é obrigatória";
+    } else if (formData.description.length < 10) {
+      newErrors.description = "Descrição deve ter pelo menos 10 caracteres";
+    }
+
+    if (!formData.category) {
+      newErrors.category = "Categoria é obrigatória";
+    }
+
+    if (!formData.priority) {
+      newErrors.priority = "Prioridade é obrigatória";
+    }
+
+    if (formData.email && !/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "E-mail inválido";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleDescriptionChange = (value: string) => {
     setFormData({ ...formData, description: value });
@@ -92,231 +157,445 @@ export default function NovoTicket() {
     return `HD-${year}-${number.toString().padStart(4, '0')}`;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.title || !formData.category || !formData.priority || !formData.description) {
+    if (!validateForm()) {
       toast({
-        title: "Erro",
-        description: "Por favor, preencha todos os campos obrigatórios",
+        title: "Formulário incompleto",
+        description: "Por favor, corrija os erros antes de continuar.",
         variant: "destructive",
       });
       return;
     }
 
-    const protocol = generateProtocol();
+    setLoading(true);
     
-    toast({
-      title: "Ticket criado com sucesso!",
-      description: `Protocolo: ${protocol}. Você receberá atualizações por email.`,
-    });
+    try {
+      // Simular envio do ticket
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      const protocol = generateProtocol();
+      
+      // Clear draft on successful submission
+      localStorage.removeItem('ticket-draft');
+      
+      toast({
+        title: "Ticket criado com sucesso!",
+        description: `Protocolo: ${protocol}. Você receberá atualizações por email.`,
+        duration: 5000,
+      });
 
-    // Reset form
+      // Reset form
+      setFormData({
+        title: "",
+        category: "",
+        priority: "",
+        description: "",
+        user: "Admin User",
+        department: "Tecnologia da Informação",
+        email: "",
+        phone: ""
+      });
+      setShowSuggestions(false);
+      setErrors({});
+      
+      navigate("/meus-tickets");
+    } catch (error) {
+      toast({
+        title: "Erro ao criar ticket",
+        description: "Tente novamente ou entre em contato com o suporte.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const clearDraft = () => {
+    localStorage.removeItem('ticket-draft');
     setFormData({
       title: "",
       category: "",
       priority: "",
       description: "",
       user: "Admin User",
-      department: "Tecnologia da Informação"
+      department: "Tecnologia da Informação",
+      email: "",
+      phone: ""
     });
+    setErrors({});
     setShowSuggestions(false);
+    toast({
+      title: "Rascunho limpo",
+      description: "Todos os campos foram resetados.",
+    });
   };
 
   const selectedPriority = priorities.find(p => p.value === formData.priority);
 
   return (
-    <div className="max-w-6xl mx-auto space-y-4 md:space-y-6">
-      <div className="text-center mb-6 md:mb-8">
-        <h1 className="text-2xl md:text-3xl font-bold text-primary mb-2">Abrir Novo Ticket</h1>
-        <p className="text-sm md:text-base text-muted-foreground px-4">
-          Descreva o problema que você está enfrentando e nossa equipe irá ajudá-lo
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 md:gap-6">
-        <div className="xl:col-span-2">
-          <Card className="shadow-card">
-            <CardHeader>
-              <CardTitle className="text-lg md:text-xl">Informações do Ticket</CardTitle>
-              <CardDescription className="text-sm">
-                Preencha os detalhes do problema que você está enfrentando
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4 md:space-y-6">
-              <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="user">Usuário</Label>
-                    <div className="flex items-center gap-2 p-3 bg-muted rounded-lg">
-                      <User className="h-4 w-4 text-muted-foreground" />
-                      <span className="font-medium">{formData.user}</span>
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="department">Setor</Label>
-                    <div className="flex items-center gap-2 p-3 bg-muted rounded-lg">
-                      <Building className="h-4 w-4 text-muted-foreground" />
-                      <span className="font-medium">{formData.department}</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="title">Título do Problema *</Label>
-                  <Input
-                    id="title"
-                    placeholder="Ex: Impressora não está funcionando"
-                    value={formData.title}
-                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    required
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label className="text-sm font-medium">Categoria *</Label>
-                    <Select 
-                      value={formData.category} 
-                      onValueChange={(value) => setFormData({ ...formData, category: value })}
-                    >
-                      <SelectTrigger className="text-sm">
-                        <SelectValue placeholder="Selecione a categoria" />
-                      </SelectTrigger>
-                       <SelectContent>
-                         {categories.map((category) => (
-                           <SelectItem key={category.value} value={category.value}>
-                             <div>
-                               <div className="font-medium text-sm">{category.label}</div>
-                               <div className="text-xs text-muted-foreground">{category.description}</div>
-                             </div>
-                           </SelectItem>
-                         ))}
-                         <div className="h-px bg-border my-2"></div>
-                         <div className="px-2 pb-1 text-xs font-medium text-muted-foreground">Setor TI</div>
-                         {tiSubcategories.map((category) => (
-                           <SelectItem key={category.value} value={category.value}>
-                             <div>
-                               <div className="font-medium text-sm">{category.label}</div>
-                               <div className="text-xs text-muted-foreground">{category.description}</div>
-                             </div>
-                           </SelectItem>
-                         ))}
-                       </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label className="text-sm font-medium">Prioridade *</Label>
-                    <Select 
-                      value={formData.priority} 
-                      onValueChange={(value) => setFormData({ ...formData, priority: value })}
-                    >
-                      <SelectTrigger className="text-sm">
-                        <SelectValue placeholder="Selecione a prioridade" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {priorities.map((priority) => (
-                          <SelectItem key={priority.value} value={priority.value}>
-                            <div className="flex items-center gap-2">
-                              <Badge className={`${priority.color} text-xs`}>
-                                {priority.label}
-                              </Badge>
-                              <span className="text-xs text-muted-foreground hidden sm:inline">
-                                {priority.description}
-                              </span>
-                            </div>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-
-                {selectedPriority && (
-                  <div className={`p-4 rounded-lg ${selectedPriority.bgColor}`}>
-                    <div className="flex items-center gap-2 mb-2">
-                      <Badge className={selectedPriority.color}>
-                        {selectedPriority.label}
-                      </Badge>
-                    </div>
-                    <p className="text-sm">{selectedPriority.description}</p>
-                  </div>
-                )}
-
-                <div className="space-y-2">
-                  <Label htmlFor="description">Descrição do Problema *</Label>
-                  <Textarea
-                    id="description"
-                    placeholder="Descreva detalhadamente o problema que você está enfrentando..."
-                    value={formData.description}
-                    onChange={(e) => handleDescriptionChange(e.target.value)}
-                    rows={6}
-                    required
-                  />
-                </div>
-
-                <Button type="submit" size="lg" className="w-full text-sm md:text-base">
-                  <Send className="mr-2 h-4 w-4" />
-                  Abrir Ticket
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
+    <TooltipProvider>
+      <div className="max-w-6xl mx-auto space-y-4 md:space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <Button
+            variant="outline"
+            onClick={() => navigate(-1)}
+            className="flex items-center gap-2 w-full sm:w-auto"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Voltar
+          </Button>
+          
+          <div className="text-center sm:text-left">
+            <h1 className="text-2xl md:text-3xl font-bold text-primary mb-2">Abrir Novo Ticket</h1>
+            <p className="text-sm md:text-base text-muted-foreground">
+              Descreva o problema que você está enfrentando e nossa equipe irá ajudá-lo
+            </p>
+          </div>
         </div>
 
-        <div className="space-y-6">
-          {showSuggestions && (
+        {/* Progress indicator - Heurística 1: Visibilidade do status do sistema */}
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between mb-2">
+              <Label className="text-sm font-medium">Progresso do formulário</Label>
+              <span className="text-sm text-muted-foreground">{Math.round(progress)}%</span>
+            </div>
+            <Progress value={progress} className="h-2" />
+            <p className="text-xs text-muted-foreground mt-2">
+              Preencha todos os campos obrigatórios para continuar
+            </p>
+          </CardContent>
+        </Card>
+
+        {/* Draft Alert */}
+        {localStorage.getItem('ticket-draft') && (
+          <Alert>
+            <AlertTriangle className="h-4 w-4" />
+            <AlertDescription className="flex items-center justify-between">
+              <span>Rascunho salvo automaticamente encontrado.</span>
+              <Button variant="outline" size="sm" onClick={clearDraft}>
+                <X className="h-4 w-4 mr-1" />
+                Limpar
+              </Button>
+            </AlertDescription>
+          </Alert>
+        )}
+
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 md:gap-6">
+          <div className="xl:col-span-2">
             <Card className="shadow-card">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-lg">
-                  <Lightbulb className="h-5 w-5 text-warning" />
-                  Sugestões IA
+                <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
+                  <AlertTriangle className="h-5 w-5 text-warning" />
+                  Informações do Ticket
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Campos marcados com * são obrigatórios</p>
+                    </TooltipContent>
+                  </Tooltip>
                 </CardTitle>
-                <CardDescription>
-                  Possíveis soluções baseadas na sua descrição
+                <CardDescription className="text-sm">
+                  Preencha os detalhes do problema que você está enfrentando
                 </CardDescription>
               </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {suggestions.map((suggestion, index) => (
-                    <div 
-                      key={index}
-                      className="p-3 bg-muted/50 rounded-lg border-l-4 border-primary text-sm"
-                    >
-                      {suggestion}
+              <CardContent className="space-y-4 md:space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="user">Usuário</Label>
+                      <div className="flex items-center gap-2 p-3 bg-muted rounded-lg">
+                        <User className="h-4 w-4 text-muted-foreground" />
+                        <span className="font-medium">{formData.user}</span>
+                      </div>
                     </div>
-                  ))}
+                    <div className="space-y-2">
+                      <Label htmlFor="department">Setor</Label>
+                      <div className="flex items-center gap-2 p-3 bg-muted rounded-lg">
+                        <Building className="h-4 w-4 text-muted-foreground" />
+                        <span className="font-medium">{formData.department}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="title" className="flex items-center gap-1">
+                      Título do Problema *
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <HelpCircle className="h-3 w-3 text-muted-foreground" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Seja específico e claro. Ex: Impressora HP LaserJet do setor financeiro não imprime</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </Label>
+                    <Input
+                      id="title"
+                      placeholder="Ex: Impressora não está funcionando"
+                      value={formData.title}
+                      onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                      className={errors.title ? 'border-destructive' : ''}
+                      required
+                    />
+                    {errors.title && (
+                      <p className="text-sm text-destructive">{errors.title}</p>
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium flex items-center gap-1">
+                        Categoria *
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <HelpCircle className="h-3 w-3 text-muted-foreground" />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Escolha a categoria que melhor descreve seu problema</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </Label>
+                      <Select 
+                        value={formData.category} 
+                        onValueChange={(value) => setFormData({ ...formData, category: value })}
+                      >
+                        <SelectTrigger className={`text-sm ${errors.category ? 'border-destructive' : ''}`}>
+                          <SelectValue placeholder="Selecione a categoria" />
+                        </SelectTrigger>
+                         <SelectContent>
+                           {categories.map((category) => (
+                             <SelectItem key={category.value} value={category.value}>
+                               <div>
+                                 <div className="font-medium text-sm">{category.label}</div>
+                                 <div className="text-xs text-muted-foreground">{category.description}</div>
+                               </div>
+                             </SelectItem>
+                           ))}
+                           <div className="h-px bg-border my-2"></div>
+                           <div className="px-2 pb-1 text-xs font-medium text-muted-foreground">Setor TI</div>
+                           {tiSubcategories.map((category) => (
+                             <SelectItem key={category.value} value={category.value}>
+                               <div>
+                                 <div className="font-medium text-sm">{category.label}</div>
+                                 <div className="text-xs text-muted-foreground">{category.description}</div>
+                               </div>
+                             </SelectItem>
+                           ))}
+                         </SelectContent>
+                      </Select>
+                      {errors.category && (
+                        <p className="text-sm text-destructive">{errors.category}</p>
+                      )}
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium flex items-center gap-1">
+                        Prioridade *
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <HelpCircle className="h-3 w-3 text-muted-foreground" />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <div className="space-y-1">
+                              <p><strong>Crítica:</strong> Sistema parado, produção afetada</p>
+                              <p><strong>Alta:</strong> Funcionalidade importante não funciona</p>
+                              <p><strong>Média:</strong> Problema que pode esperar algumas horas</p>
+                              <p><strong>Baixa:</strong> Melhoria ou problema menor</p>
+                            </div>
+                          </TooltipContent>
+                        </Tooltip>
+                      </Label>
+                      <Select 
+                        value={formData.priority} 
+                        onValueChange={(value) => setFormData({ ...formData, priority: value })}
+                      >
+                        <SelectTrigger className={`text-sm ${errors.priority ? 'border-destructive' : ''}`}>
+                          <SelectValue placeholder="Selecione a prioridade" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {priorities.map((priority) => (
+                            <SelectItem key={priority.value} value={priority.value}>
+                              <div className="flex items-center gap-2">
+                                <div className={`w-3 h-3 rounded-full ${priority.color}`}></div>
+                                <div>
+                                  <div className="font-medium text-sm">{priority.label}</div>
+                                  <div className="text-xs text-muted-foreground hidden sm:inline">
+                                    {priority.description}
+                                  </div>
+                                </div>
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      {errors.priority && (
+                        <p className="text-sm text-destructive">{errors.priority}</p>
+                      )}
+                    </div>
+                  </div>
+
+                  {selectedPriority && (
+                    <div className={`p-4 rounded-lg ${selectedPriority.bgColor}`}>
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className={`w-3 h-3 rounded-full ${selectedPriority.color}`}></div>
+                        <span className="font-medium">{selectedPriority.label}</span>
+                      </div>
+                      <p className="text-sm">{selectedPriority.description}</p>
+                    </div>
+                  )}
+
+                  <div className="space-y-2">
+                    <Label htmlFor="description" className="flex items-center gap-1">
+                      Descrição do Problema *
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <HelpCircle className="h-3 w-3 text-muted-foreground" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Inclua: quando o problema começou, frequência, impacto e passos já tentados</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </Label>
+                    <Textarea
+                      id="description"
+                      placeholder="Descreva detalhadamente o problema que você está enfrentando..."
+                      value={formData.description}
+                      onChange={(e) => handleDescriptionChange(e.target.value)}
+                      rows={6}
+                      className={`resize-none ${errors.description ? 'border-destructive' : ''}`}
+                      required
+                    />
+                    {errors.description && (
+                      <p className="text-sm text-destructive">{errors.description}</p>
+                    )}
+                    <p className="text-xs text-muted-foreground">
+                      {formData.description.length}/500 caracteres
+                    </p>
+                  </div>
+
+                  {/* Contact Information */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="email">E-mail para Contato</Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        placeholder="seu.email@empresa.com"
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        className={errors.email ? 'border-destructive' : ''}
+                      />
+                      {errors.email && (
+                        <p className="text-sm text-destructive">{errors.email}</p>
+                      )}
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="phone">Telefone</Label>
+                      <Input
+                        id="phone"
+                        placeholder="(11) 99999-9999"
+                        value={formData.phone}
+                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 sm:justify-end">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => navigate("/meus-tickets")}
+                      className="w-full sm:w-auto order-2 sm:order-1"
+                    >
+                      Cancelar
+                    </Button>
+                    <Button
+                      type="submit"
+                      disabled={loading || progress < 100}
+                      className="w-full sm:w-auto order-1 sm:order-2 flex items-center gap-2"
+                    >
+                      {loading ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                          Criando...
+                        </>
+                      ) : (
+                        <>
+                          <Send className="h-4 w-4" />
+                          Abrir Ticket
+                          {progress === 100 && <CheckCircle className="h-4 w-4 ml-1 text-green-500" />}
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </form>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="space-y-6">
+            {showSuggestions && (
+              <Card className="shadow-card">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-lg">
+                    <Lightbulb className="h-5 w-5 text-warning" />
+                    Sugestões IA
+                  </CardTitle>
+                  <CardDescription>
+                    Possíveis soluções baseadas na sua descrição
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    {suggestions.map((suggestion, index) => (
+                      <div 
+                        key={index}
+                        className="p-3 bg-muted/50 rounded-lg border-l-4 border-primary text-sm"
+                      >
+                        {suggestion}
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            <Card className="shadow-card">
+              <CardHeader>
+                <CardTitle>Dicas para um bom ticket</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3 text-sm">
+                <div className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                  <p>Seja específico sobre o problema</p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                  <p>Inclua mensagens de erro se houver</p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                  <p>Mencione quando o problema começou</p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                  <p>Descreva o que você estava fazendo</p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                  <p>Informe qual é o impacto no trabalho</p>
                 </div>
               </CardContent>
             </Card>
-          )}
-
-          <Card className="shadow-card">
-            <CardHeader>
-              <CardTitle>Dicas para um bom ticket</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3 text-sm">
-              <div className="flex items-start gap-2">
-                <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
-                <p>Seja específico sobre o problema</p>
-              </div>
-              <div className="flex items-start gap-2">
-                <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
-                <p>Inclua mensagens de erro se houver</p>
-              </div>
-              <div className="flex items-start gap-2">
-                <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
-                <p>Mencione quando o problema começou</p>
-              </div>
-              <div className="flex items-start gap-2">
-                <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
-                <p>Descreva o que você estava fazendo</p>
-              </div>
-            </CardContent>
-          </Card>
+          </div>
         </div>
-      </div>
+      </TooltipProvider>
     </div>
   );
 }

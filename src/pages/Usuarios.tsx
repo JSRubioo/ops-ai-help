@@ -5,9 +5,11 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { UserPlus, Search, Edit, Trash2, Shield, User } from "lucide-react";
+import { UserPlus, Search, Edit, Trash2, Shield, User, AlertTriangle } from "lucide-react";
+import { toast } from "sonner";
 
 interface Usuario {
   id: string;
@@ -123,6 +125,8 @@ export default function Usuarios() {
       tipo: "Usuário"
     });
     setIsDialogOpen(false);
+    
+    toast.success(`Usuário ${formData.nome} foi criado com sucesso.`);
   };
 
   const handleEditUser = (user: Usuario) => {
@@ -166,10 +170,13 @@ export default function Usuarios() {
       tipo: "Usuário"
     });
     setIsDialogOpen(false);
+    
+    toast.success(`Usuário ${formData.nome} foi atualizado com sucesso.`);
   };
 
-  const handleDeleteUser = (id: string) => {
+  const handleDeleteUser = (id: string, userName: string) => {
     setUsuarios(usuarios.filter(user => user.id !== id));
+    toast.success(`Usuário ${userName} foi removido com sucesso.`);
   };
 
   const resetForm = () => {
@@ -377,14 +384,39 @@ export default function Usuarios() {
                       >
                         <Edit className="h-4 w-4" />
                       </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleDeleteUser(usuario.id)}
-                        className="text-destructive hover:text-destructive"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                      {/* Delete with confirmation - Heurística 5: Prevenção de erros */}
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="text-destructive hover:text-destructive"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle className="flex items-center gap-2">
+                              <AlertTriangle className="h-5 w-5 text-destructive" />
+                              Confirmar exclusão
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Tem certeza que deseja excluir o usuário <strong>{usuario.nome}</strong>? 
+                              Esta ação não pode ser desfeita e todos os dados relacionados serão perdidos.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                            <AlertDialogAction 
+                              onClick={() => handleDeleteUser(usuario.id, usuario.nome)}
+                              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                            >
+                              Sim, excluir
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     </div>
                   </TableCell>
                 </TableRow>
