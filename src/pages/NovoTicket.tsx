@@ -595,7 +595,7 @@ export default function NovoTicket() {
             </Card>
           </div>
         </div>
-      </TooltipProvider>
-    </div>
+      </div>
+    </TooltipProvider>
   );
 }
