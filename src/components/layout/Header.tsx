@@ -22,7 +22,8 @@ const routeNames: Record<string, string> = {
   '/': 'Dashboard',
   '/novo-ticket': 'Novo Ticket',
   '/meus-tickets': 'Meus Tickets',
-  '/relatorios': 'Todos Chamados',
+  '/todos-chamados': 'Todos Chamados',
+  '/relatorios': 'Relatórios',
   '/faq': 'FAQ',
   '/usuarios': 'Usuários',
   '/perfil': 'Perfil',
@@ -206,7 +207,7 @@ export function Header() {
                   </TooltipContent>
                 </Tooltip>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-72 md:w-80 bg-popover/95 backdrop-blur" align="end" forceMount>
+              <DropdownMenuContent className="w-72 md:w-80 bg-popover backdrop-blur z-50 border shadow-lg" align="end" forceMount>
                 <DropdownMenuLabel className="flex items-center justify-between">
                   <span>Notificações</span>
                   {unreadCount > 0 && (
@@ -296,7 +297,7 @@ export function Header() {
                   </TooltipContent>
                 </Tooltip>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56 bg-popover/95 backdrop-blur" align="end" forceMount>
+              <DropdownMenuContent className="w-56 bg-popover backdrop-blur z-50 border shadow-lg" align="end" forceMount>
                 <DropdownMenuLabel className="font-normal">
                   <div className="flex flex-col space-y-1">
                     <p className="text-sm font-medium leading-none">Admin User</p>
