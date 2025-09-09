@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
-import { Bell, User, Settings, LogOut, Home, HelpCircle, AlertCircle, Clock, CheckCircle, Camera, Edit } from "lucide-react";
+import { Bell, User, Settings, LogOut, Home, HelpCircle, AlertCircle, Clock, CheckCircle } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "sonner";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -119,23 +119,6 @@ export function Header() {
     navigate('/login');
   };
 
-  const handleChangeProfilePicture = () => {
-    // Simular upload de foto
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'image/*';
-    input.onchange = (event) => {
-      const file = (event.target as HTMLInputElement).files?.[0];
-      if (file) {
-        toast({
-          title: "Foto alterada com sucesso",
-          description: "Sua foto de perfil foi atualizada.",
-        });
-      }
-    };
-    input.click();
-  };
-
   return (
     <TooltipProvider>
       <header className="h-14 md:h-16 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
@@ -179,7 +162,7 @@ export function Header() {
                   variant="ghost" 
                   size="icon"
                   onClick={() => navigate('/faq')}
-                  className="hidden sm:flex h-8 w-8 md:h-10 md:w-10 hover:bg-muted/80 hover:scale-105 transition-all duration-200 border border-transparent hover:border-muted-foreground/20"
+                  className="hidden sm:flex h-8 w-8 md:h-10 md:w-10"
                 >
                   <HelpCircle className="h-4 w-4" />
                 </Button>
@@ -193,11 +176,7 @@ export function Header() {
             {criticalNotifications.length > 0 && (
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    className="text-destructive animate-pulse h-8 w-8 md:h-10 md:w-10 hover:bg-destructive/10 hover:scale-105 transition-all duration-200 border border-transparent hover:border-destructive/20"
-                  >
+                  <Button variant="ghost" size="icon" className="text-destructive animate-pulse h-8 w-8 md:h-10 md:w-10">
                     <AlertCircle className="h-4 w-4" />
                   </Button>
                 </TooltipTrigger>
@@ -210,11 +189,7 @@ export function Header() {
               <DropdownMenuTrigger asChild>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      className="relative h-8 w-8 md:h-10 md:w-10 hover:bg-muted/80 hover:scale-105 transition-all duration-200 border border-transparent hover:border-muted-foreground/20"
-                    >
+                    <Button variant="ghost" size="icon" className="relative h-8 w-8 md:h-10 md:w-10">
                       <Bell className="h-4 w-4" />
                       {unreadCount > 0 && (
                         <Badge 
@@ -308,13 +283,9 @@ export function Header() {
               <DropdownMenuTrigger asChild>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button 
-                      variant="ghost" 
-                      className="relative h-8 w-8 rounded-full hover:bg-muted/80 hover:scale-105 transition-all duration-200 border border-transparent hover:border-muted-foreground/20 ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                    >
-                      <Avatar className="h-8 w-8 shadow-sm">
-                        <AvatarImage src="/placeholder.svg" alt="Avatar do usuário" />
-                        <AvatarFallback className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground font-semibold text-sm">
+                    <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                      <Avatar className="h-8 w-8">
+                        <AvatarFallback className="bg-primary text-primary-foreground">
                           AD
                         </AvatarFallback>
                       </Avatar>
@@ -325,45 +296,29 @@ export function Header() {
                   </TooltipContent>
                 </Tooltip>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-64 bg-popover/95 backdrop-blur shadow-lg" align="end" forceMount>
-                <DropdownMenuLabel className="font-normal p-4">
-                  <div className="flex items-center space-x-3">
-                    <Avatar className="h-12 w-12 shadow-md">
-                      <AvatarImage src="/placeholder.svg" alt="Avatar do usuário" />
-                      <AvatarFallback className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground font-bold">
-                        AD
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex flex-col space-y-1">
-                      <p className="text-sm font-semibold leading-none">Admin User</p>
-                      <p className="text-xs leading-none text-muted-foreground">
-                        admin@empresa.com
-                      </p>
-                      <Badge variant="secondary" className="w-fit text-xs mt-1">
-                        Administrador
-                      </Badge>
-                    </div>
+              <DropdownMenuContent className="w-56 bg-popover/95 backdrop-blur" align="end" forceMount>
+                <DropdownMenuLabel className="font-normal">
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium leading-none">Admin User</p>
+                    <p className="text-xs leading-none text-muted-foreground">
+                      admin@empresa.com
+                    </p>
+                    <Badge variant="secondary" className="w-fit text-xs mt-1">
+                      Administrador
+                    </Badge>
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem 
-                  onClick={handleChangeProfilePicture}
-                  className="cursor-pointer flex items-center gap-2 p-3 hover:bg-muted/50"
-                >
-                  <Camera className="mr-2 h-4 w-4" />
-                  <span>Alterar Foto de Perfil</span>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem 
                   onClick={() => navigate('/perfil')}
-                  className="cursor-pointer flex items-center gap-2 p-3 hover:bg-muted/50"
+                  className="cursor-pointer"
                 >
                   <User className="mr-2 h-4 w-4" />
-                  <span>Meu Perfil</span>
+                  <span>Perfil</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem 
                   onClick={() => navigate('/configuracoes')}
-                  className="cursor-pointer flex items-center gap-2 p-3 hover:bg-muted/50"
+                  className="cursor-pointer"
                 >
                   <Settings className="mr-2 h-4 w-4" />
                   <span>Configurações</span>
@@ -371,10 +326,10 @@ export function Header() {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem 
                   onClick={handleLogout}
-                  className="cursor-pointer text-destructive focus:text-destructive flex items-center gap-2 p-3 hover:bg-destructive/10"
+                  className="cursor-pointer text-destructive focus:text-destructive"
                 >
                   <LogOut className="mr-2 h-4 w-4" />
-                  <span>Sair do Sistema</span>
+                  <span>Sair</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
