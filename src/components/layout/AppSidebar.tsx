@@ -5,7 +5,8 @@ import {
   FileText, 
   Settings,
   Users,
-  BarChart3
+  BarChart3,
+  Ticket
 } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 
@@ -24,7 +25,7 @@ const mainItems = [
   { title: "Dashboard", url: "/", icon: LayoutDashboard },
   { title: "Novo Ticket", url: "/novo-ticket", icon: TicketPlus },
   { title: "Meus Tickets", url: "/meus-tickets", icon: FileText },
-  { title: "Todos Chamados", url: "/relatorios", icon: FileText },
+  { title: "Todos Chamados", url: "/todos-chamados", icon: Ticket },
   { title: "FAQ", url: "/faq", icon: HelpCircle },
 ];
 

@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import NovoTicket from "./pages/NovoTicket";
 import FAQ from "./pages/FAQ";
 import Relatorios from "./pages/Relatorios";
+import TodosChamados from "./pages/TodosChamados";
 import PesquisarTickets from "./pages/PesquisarTickets";
 import EditarTicket from "./pages/EditarTicket";
 import VisualizarTicket from "./pages/VisualizarTicket";
@@ -60,6 +61,11 @@ const App = () => (
           <Route path="/relatorios" element={
             <Layout>
               <Relatorios />
+            </Layout>
+          } />
+          <Route path="/todos-chamados" element={
+            <Layout>
+              <TodosChamados />
             </Layout>
           } />
           <Route path="/usuarios" element={
